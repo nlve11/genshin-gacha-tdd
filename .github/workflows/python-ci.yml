@@ -1,9 +1,8 @@
-name: gacha-tdd-pipeline
+name: gacha-tdd-ci
 
 on:
   push:
-    branches:
-      - develop
+    branches: [ "develop" ]
 
 jobs:
   test:
@@ -12,12 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
-      - run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install pytest flake8
 
-      - run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: Lint check
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-      - run: pytest test_business_logic.py -v
+      - name: Run tests
+        run: pytest test_business_logic.py -v
